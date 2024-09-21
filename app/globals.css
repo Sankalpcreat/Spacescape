@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light Mode Variables */
+:root {
+  --foreground-rgb: 0, 0, 0; /* Default text color: black */
+  --background-start-rgb: 255, 255, 255; /* Light background start: white */
+  --background-end-rgb: 240, 240, 240; /* Light background end: light grey */
+  --accent-color-rgb: 59, 130, 246; /* Accent color: blue-500 from Tailwind */
+  --secondary-color-rgb: 234, 88, 12; /* Secondary color: orange-600 from Tailwind */
+}
+
+/* Dark Mode Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255; /* Dark mode text color: white */
+    --background-start-rgb: 30, 30, 30; /* Dark background start: dark grey */
+    --background-end-rgb: 15, 15, 15; /* Dark background end: darker grey */
+    --accent-color-rgb: 34, 197, 94; /* Accent color: green-500 */
+    --secondary-color-rgb: 59, 130, 246; /* Secondary color: blue-500 in dark mode */
+  }
+}
+
+/* Apply to Body */
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Button Styles */
+button {
+  background-color: rgb(var(--accent-color-rgb));
+  color: rgb(var(--foreground-rgb));
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: rgb(var(--secondary-color-rgb));
+}
+
+h1, h2, h3, p {
+  transition: color 0.3s ease;
+}
+
+/* Custom Accent Color Class */
+.accent {
+  color: rgb(var(--accent-color-rgb));
+}
