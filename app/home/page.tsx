@@ -132,7 +132,7 @@ export default function HomePage() {
               <ImageDropzone
                 title="Drag 'n drop your image here or click to upload"
                 onImageDrop={onImageDrop}
-                icon={PhotoIcon} // Using the imported PhotoIcon
+                 // Using the imported PhotoIcon
               />
             ) : (
               <UploadedImage

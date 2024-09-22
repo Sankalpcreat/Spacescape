@@ -5,9 +5,13 @@ import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // Assuming you have a Carousel component
 import ClientLayout from '../components/ClientLayout';
 import { SparklesCore } from "@/components/ui/sparkles";
+type ProjectContentProps = {
+  original: string;  // Define the type of 'original' based on your data
+  generated: string; // Define the type of 'generated' based on your data
+};
 
 // Component for showing Original and AI-generated design within a card
-const ProjectContent = ({ original, generated }) => {
+const ProjectContent: React.FC<ProjectContentProps> = ({ original, generated }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="relative">
@@ -75,7 +79,7 @@ export default function ProjectsPage() {
         title: project.title,
         content: <ProjectContent original={project.original} generated={project.generated} />,
         src: project.generated, // For card cover image
-        description: project.description,
+        // description: project.description,
       }}
       index={index}
     />
