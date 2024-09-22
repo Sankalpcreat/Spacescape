@@ -21,10 +21,10 @@ export const SparklesCore = (props: ParticlesProps) => {
     id,
     className,
     background,
-    minSize = 0.4,
-    maxSize = 1,
+    minSize = 1,
+    maxSize = 2,
     particleColor = "#8B5CF6",
-    particleDensity = 1200,
+    particleDensity = 1500,
   } = props;
 
   const [init, setInit] = useState(false);

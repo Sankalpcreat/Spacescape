@@ -1,7 +1,9 @@
 import { usePathname } from "next/navigation";
 import { FolderOpen, Settings, HelpCircle, Home } from "lucide-react"; // Import icons for the navigation items
 import Link from "next/link";
-import { classNames } from "@/utils"; // Ensure you have a classNames utility
+import { classNames } from "@/utils";
+ // Ensure you have a classNames utility
+
 
 export function DesktopSidebar() {
   const pathName = usePathname(); // Get the current path
@@ -16,6 +18,7 @@ export function DesktopSidebar() {
 
   return (
     <aside className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white">
+
       <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6">
         
         {/* Header Section */}

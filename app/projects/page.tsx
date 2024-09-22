@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // Assuming you have a Carousel component
 import ClientLayout from '../components/ClientLayout';
+import { SparklesCore } from "@/components/ui/sparkles";
 
 // Component for showing Original and AI-generated design within a card
 const ProjectContent = ({ original, generated }) => {
@@ -82,12 +83,22 @@ export default function ProjectsPage() {
 
   return (
     <ClientLayout>
-    <div className="w-full h-full py-20">
-      <h2 className="max-w-7xl pl-4 mx-auto text-2xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-        AI-Generated Interior Designs
-      </h2>
-      <Carousel items={cards} />
-    </div>
+      {/* Add SparklesCore for the sparkling effect */}
+      <SparklesCore
+        className="absolute inset-0 z-0"
+        background="transparent"
+        minSize={.8}
+        maxSize={1.5}
+        particleColor="#FFFFFF"
+        particleDensity={1500}
+      />
+
+      <div className="w-full h-full py-20 relative z-10">
+        <h2 className="max-w-7xl pl-4 mx-auto text-2xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+          AI-Generated Interior Designs
+        </h2>
+        <Carousel items={cards} />
+      </div>
     </ClientLayout>
   );
 }

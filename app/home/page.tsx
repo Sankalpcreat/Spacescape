@@ -1,16 +1,16 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { saveAs } from "file-saver";
 import { PhotoIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { ErrorNotification } from "@/components/ErrorNotification";
-import { ActionPanel } from "@/components/ActionPanel";
-import { ImageDropzone } from "@/components/ImageDropzone";
-import { UploadedImage } from "@/components/UploadedImage";
-import { ImageOutput } from "@/components/ImageOutput";
-import { SelectMenu } from "../selectmenu";
+import { ErrorNotification } from "@/components/ErrorNotification"; 
+import { ActionPanel } from "@/components/ActionPanel"; 
+import { ImageDropzone } from "@/components/ImageDropzone"; 
+import { UploadedImage } from "@/components/UploadedImage"; 
+import { ImageOutput } from "@/components/ImageOutput"; 
+import { SelectMenu } from "../selectmenu"; 
 import { useImageUpload } from "../ hooks/useImageUpload";
 import ClientLayout from '../components/ClientLayout';
-import { usePathname } from 'next/navigation'; // To check the current page
+import { SparklesCore } from "@/components/ui/sparkles"; // Import the sparkling background component
 
 const themes = ["Modern", "Vintage", "Minimalist", "Professional"];
 const rooms = ["Living Room", "Dining Room", "Bedroom", "Bathroom", "Office"];
@@ -43,9 +43,6 @@ export default function HomePage() {
   const [room, setRoom] = useState<string>(rooms[0]);
   const [showMessage, setShowMessage] = useState(false);
 
-  const pathname = usePathname();
-  const isLandingPage = pathname === '/'; // Detect if it's the landing page
-
   async function submitImage() {
     if (!file) {
       setError("Please upload an image.");
@@ -74,13 +71,14 @@ export default function HomePage() {
     setOutputImage(result.output[1]);
     setLoading(false);
   }
-
+  
   setTimeout(() => {
     setShowMessage(false);
   }, 10000);
 
   function downloadOutputImage() {
     if (outputImage) {
+      // Check if the outputImage is a valid URL or a base64 string
       const isBase64 = outputImage.startsWith("data:image");
       if (isBase64) {
         saveAs(outputImage, "output.png");
@@ -92,55 +90,68 @@ export default function HomePage() {
 
   return (
     <ClientLayout>
-      <main className={`flex min-h-screen flex-col ${isLandingPage ? 'px-0' : 'lg:pl-72 py-10'}`}>
-        {error ? <ErrorNotification errorMessage={error} /> : null}
-        <ActionPanel isLoading={loading} submitImage={submitImage} />
+      {/* Sparkling background */}
+      <div className="relative w-full h-full min-h-screen">
+      <SparklesCore
+        className="absolute inset-0 z-0"
+        background="transparent"
+        minSize={.8}
+        maxSize={1.5}
+        particleColor="#FFFFFF"
+        particleDensity={1500}
+      />
 
-        {showMessage && (
-          <div className="mx-4 mt-5 text-center text-lg font-semibold text-white bg-indigo-600 p-2 rounded-md">
-            Wait for 10 seconds to generate the image...
-          </div>
-        )}
+        {/* Main Content */}
+        <main className="relative z-10 flex min-h-screen flex-col py-10 lg:pl-72">
+          {error ? <ErrorNotification errorMessage={error} /> : null}
+          <ActionPanel isLoading={loading} submitImage={submitImage} />
 
-        <section className="mx-4 my-10 mt-9 flex w-fit flex-col space-y-8 lg:mx-6 lg:flex-row lg:space-x-8 lg:space-y-0 xl:mx-8">
-          <SelectMenu
-            label="Model"
-            options={themes}
-            selected={theme}
-            onChange={setTheme}
-          />
-          <SelectMenu
-            label="Room type"
-            options={rooms}
-            selected={room}
-            onChange={setRoom}
-          />
-        </section>
-
-        <section className="mt-10 grid flex-1 gap-6 px-4 lg:px-6 xl:grid-cols-2 xl:gap-8 xl:px-8">
-          {!file ? (
-            <ImageDropzone
-              title="Drag 'n drop your image here or click to upload"
-              onImageDrop={onImageDrop}
-              icon={PhotoIcon}
-            />
-          ) : (
-            <UploadedImage
-              image={file}
-              removeImage={removeImage}
-              file={{ name: file.name, size: fileSize(file.size) }}
-            />
+          {showMessage && (
+            <div className="mx-4 mt-5 text-center text-lg font-semibold text-white bg-indigo-600 p-2 rounded-md">
+              Wait for 10 seconds to generate the image...
+            </div>
           )}
 
-          <ImageOutput
-            title="AI-generated output goes here"
-            downloadOutputImage={() => saveAs(outputImage, "output.png")}
-            outputImage={outputImage}
-            icon={SparklesIcon}
-            loading={loading}
-          />
-        </section>
-      </main>
+          <section className="mx-4  my-10 mt-9 flex w-fit flex-col space-y-8 lg:mx-6 lg:flex-row lg:space-x-8 lg:space-y-0 xl:mx-8">
+            <SelectMenu
+              label="Model"
+              options={themes}
+              selected={theme}
+              onChange={setTheme}
+            />
+            <SelectMenu
+              label="Room type"
+              options={rooms}
+              selected={room}
+              onChange={setRoom}
+            />
+          </section>
+
+          <section className="mt-10 grid flex-1 gap-6 px-4 lg:px-6 xl:grid-cols-2 xl:gap-8 xl:px-8">
+            {!file ? (
+              <ImageDropzone
+                title="Drag 'n drop your image here or click to upload"
+                onImageDrop={onImageDrop}
+                icon={PhotoIcon} // Using the imported PhotoIcon
+              />
+            ) : (
+              <UploadedImage
+                image={file}
+                removeImage={removeImage}
+                file={{ name: file.name, size: fileSize(file.size) }}
+              />
+            )}
+
+            <ImageOutput
+              title="AI-generated output goes here"
+              downloadOutputImage={downloadOutputImage}
+              outputImage={outputImage}
+              icon={SparklesIcon} // Using the imported SparklesIcon
+              loading={loading}
+            />
+          </section>
+        </main>
+      </div>
     </ClientLayout>
   );
 }
