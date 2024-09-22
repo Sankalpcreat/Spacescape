@@ -8,7 +8,7 @@ export function DesktopSidebar() {
 
   // Define your navigation items
   const extendedNavigation = [
-    { name: 'Home', href: '/', icon: Home }, // Home Icon from lucide-react
+    { name: 'Home', href: '/home', icon: Home }, // Home Icon from lucide-react
     { name: 'Projects', href: '/projects', icon: FolderOpen }, // Projects link with FolderOpen icon
     { name: 'Settings', href: '/settings', icon: Settings }, // Settings link with Settings icon
     { name: 'Help & Support', href: '/help', icon: HelpCircle }, // Help & Support with HelpCircle icon

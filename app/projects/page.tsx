@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // Assuming you have a Carousel component
+import ClientLayout from '../components/ClientLayout';
 
 // Component for showing Original and AI-generated design within a card
 const ProjectContent = ({ original, generated }) => {
@@ -80,11 +81,13 @@ export default function ProjectsPage() {
   ));
 
   return (
+    <ClientLayout>
     <div className="w-full h-full py-20">
       <h2 className="max-w-7xl pl-4 mx-auto text-2xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
         AI-Generated Interior Designs
       </h2>
       <Carousel items={cards} />
     </div>
+    </ClientLayout>
   );
 }

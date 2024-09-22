@@ -3,6 +3,6 @@ import { NavItem } from '@/types'; // Ensure this path is correct
 
 // Define the navigation array
 export const navigation: Array<NavItem> = [
-  { name: 'Home', href: '/', icon: HomeIcon },
+  { name: 'Home', href: '/home ', icon: HomeIcon },
   { name: 'History', href: '/history', icon: ListBulletIcon },
 ];

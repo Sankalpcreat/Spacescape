@@ -9,7 +9,7 @@ type ActionPanelProps = {
 
 export function ActionPanel({ isLoading, submitImage }: ActionPanelProps) {
   return (
-    <div className="w-full mx-auto overflow-hidden rounded-xl shadow-2xl">
+    <div className="w-full max-w-7xl mx-auto overflow-hidden rounded-xl shadow-2xl">
       {/* Background Section */}
       <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-8 md:p-12">
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-10 z-0"></div>
@@ -20,7 +20,7 @@ export function ActionPanel({ isLoading, submitImage }: ActionPanelProps) {
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-4xl">
             Upload an image of a room, and let our AI generate a beautiful design tailored to your preferences.
           </p>
-          
+
           <Button
             disabled={isLoading}
             onClick={submitImage}
@@ -41,7 +41,7 @@ export function ActionPanel({ isLoading, submitImage }: ActionPanelProps) {
             )}
           </Button>
         </div>
-        
+
         <div className="absolute bottom-0 right-0 transform translate-y-1/4 translate-x-1/4">
           <Sparkles className="w-48 h-48 text-pink-300 opacity-50" />
         </div>

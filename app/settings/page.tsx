@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Moon, Sun, Bell, Globe, CreditCard, Save, Rocket, Star } from 'lucide-react';
+import ClientLayout from '../components/ClientLayout';
 
 export default function SpaceSettings() {
   const [darkMode, setDarkMode] = useState(true);
@@ -19,6 +20,7 @@ export default function SpaceSettings() {
   };
 
   return (
+    <ClientLayout>
     <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-800 text-white p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-16">
@@ -119,5 +121,6 @@ export default function SpaceSettings() {
         <Toast />
       </div>
     </div>
+    </ClientLayout>
   );
 }

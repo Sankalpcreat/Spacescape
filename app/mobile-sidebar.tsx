@@ -16,7 +16,7 @@ export function MobileSidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const pathName = usePathname(); // Get the current path
 
   const extendedNavigation = [
-    { name: 'Home', href: '/', icon: FolderOpen }, // Adjust as needed
+    { name: 'Home', href: '/home', icon: FolderOpen }, // Adjust as needed
     { name: 'Projects', href: '/projects', icon: FolderOpen },
     { name: 'Settings', href: '/settings', icon: Settings },
     { name: 'Help & Support', href: '/help', icon: HelpCircle }
