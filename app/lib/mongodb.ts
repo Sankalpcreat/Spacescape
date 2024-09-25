@@ -14,19 +14,17 @@ if (!cached) {
 
 async function connectToDatabase() {
   if (cached.conn) {
-    return cached.conn; // Only return the `conn` if it already exists
+    return cached.conn;
   }
 
   if (!cached.promise) {
-   
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose.connection.db; // Return the db object
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      return mongoose.connection.db; // Return the database instance
     });
   }
 
   cached.conn = await cached.promise;
-  return cached.conn; // This should be the db instance
+  return cached.conn;
 }
 
 export default connectToDatabase;
