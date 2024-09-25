@@ -92,14 +92,7 @@ export default function HomePage() {
     <ClientLayout>
       {/* Sparkling background */}
       <div className="relative w-full h-full min-h-screen">
-      <SparklesCore
-        className="absolute inset-0 z-0"
-        background="transparent"
-        minSize={.8}
-        maxSize={1.5}
-        particleColor="#FFFFFF"
-        particleDensity={1500}
-      />
+     
 
         {/* Main Content */}
         <main className="relative z-10 flex min-h-screen flex-col py-10 lg:pl-72">

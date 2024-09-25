@@ -24,14 +24,7 @@ export default function SpaceSettings() {
   return (
     <ClientLayout>
       {/* Sparkles Background */}
-      <SparklesCore
-        className="absolute inset-0 z-0"
-        background="transparent"
-        minSize={.8}
-        maxSize={1.5}
-        particleColor="#FFFFFF"
-        particleDensity={1500}
-      />
+  
 
       <div className="min-h-screen relative z-10 text-white p-8">
         <div className="max-w-6xl mx-auto">

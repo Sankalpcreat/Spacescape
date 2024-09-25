@@ -88,14 +88,7 @@ export default function ProjectsPage() {
   return (
     <ClientLayout>
       {/* Add SparklesCore for the sparkling effect */}
-      <SparklesCore
-        className="absolute inset-0 z-0"
-        background="transparent"
-        minSize={.8}
-        maxSize={1.5}
-        particleColor="#FFFFFF"
-        particleDensity={1500}
-      />
+    
 
       <div className="w-full h-full py-20 relative z-10">
         <h2 className="max-w-7xl pl-4 mx-auto text-2xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
