@@ -13,17 +13,23 @@ export default function Signup() {
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ username, email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify({ username, email, password }),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (res.ok) {
-      router.push("/login");
-    } else {
-      const data = await res.json();
-      setError(data.message);
+      if (res.ok) {
+        // If signup is successful, redirect to login page
+        router.push("/signin");
+      } else {
+        const data = await res.json();
+        setError(data.message);
+      }
+    } catch (err) {
+      console.error("Failed to signup:", err);
+      setError("Something went wrong");
     }
   };
 
@@ -70,9 +76,7 @@ export default function Signup() {
               className="w-full mt-2 px-4 py-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:border-yellow-500 focus:ring-yellow-500"
             />
           </div>
-          {error && (
-            <p className="text-red-500 text-sm mb-4">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full px-4 py-2 bg-yellow-500 text-indigo-900 font-semibold rounded-md hover:bg-yellow-400 transition-colors"
