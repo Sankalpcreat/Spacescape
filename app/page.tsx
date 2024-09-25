@@ -2,12 +2,18 @@
 import React from "react";
 import { SparklesPreview } from "@/components/ui/sparkles"; // Ensure the correct path
 import { HeroScrollDemo } from "@/components/ui/hero-scroll-demo"; // Ensure the correct path
+import Navbar from "@/components/navbar"; // Import the Navbar
 
 export default function LandingPage() {
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-black">
-      {/* Hero Section */}
+      {/* Add the Navbar */}
+      <Navbar />
+
+      {/* Sparkles Preview Section */}
       <SparklesPreview />
+
+      {/* Main Content Section */}
       <div className="text-center mt-10">
         <h2 className="text-4xl font-bold text-white">Join Now</h2>
         <p className="text-lg text-gray-400 mt-4">
