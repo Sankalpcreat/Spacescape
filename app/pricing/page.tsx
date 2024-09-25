@@ -12,6 +12,8 @@ import {
 import { Rocket, Star, Zap } from "lucide-react";
 
 export default function PricingPage() {
+  const [loading, setLoading] = useState(false);
+
   const pricingPlans = [
     {
       name: "Starter Pro",
@@ -37,6 +39,28 @@ export default function PricingPage() {
     },
   ];
 
+  const handlePurchase = async (planName: string, planPrice: number) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planName, planPrice }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe Checkout
+      } else {
+        alert("Failed to create Stripe session.");
+      }
+    } catch (error) {
+      console.error("Error during purchase:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-800 text-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -54,9 +78,7 @@ export default function PricingPage() {
             <Card
               key={index}
               className={`bg-indigo-800 bg-opacity-50 backdrop-blur-lg border-2 ${
-                plan.popular
-                  ? "border-yellow-300"
-                  : "border-purple-500"
+                plan.popular ? "border-yellow-300" : "border-purple-500"
               } relative overflow-hidden`}
             >
               {plan.popular && (
@@ -83,8 +105,12 @@ export default function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-yellow-500 text-indigo-900 hover:bg-yellow-400">
-                  Purchase
+                <Button
+                  className="w-full bg-yellow-500 text-indigo-900 hover:bg-yellow-400"
+                  onClick={() => handlePurchase(plan.name, plan.price)}
+                  disabled={loading}
+                >
+                  {loading ? "Processing..." : "Purchase"}
                 </Button>
               </CardFooter>
             </Card>
