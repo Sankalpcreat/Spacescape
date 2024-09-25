@@ -6,7 +6,6 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable.");
 }
 
-// Global is used here to maintain a cached connection across hot reloads in development
 let cached = global.mongoose;
 
 if (!cached) {
@@ -15,17 +14,19 @@ if (!cached) {
 
 async function connectToDatabase() {
   if (cached.conn) {
-    return cached.conn;
+    return cached.conn; // Only return the `conn` if it already exists
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      return mongoose;
+   
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose.connection.db; // Return the db object
     });
   }
 
   cached.conn = await cached.promise;
-  return cached.conn;
+  return cached.conn; // This should be the db instance
 }
 
 export default connectToDatabase;

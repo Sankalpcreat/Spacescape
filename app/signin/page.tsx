@@ -12,17 +12,23 @@ export default function SignIn() {
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await fetch("/api/auth/signin", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
-      router.push("/home");
-    } else {
-      const data = await res.json();
-      setError(data.message);
+      if (res.ok) {
+        // Redirect to home page upon successful signin
+        router.push("/home");
+      } else {
+        const data = await res.json();
+        setError(data.message);  // Display error message from the response
+      }
+    } catch (err) {
+      console.error("Failed to signin:", err);
+      setError("Something went wrong");
     }
   };
 
@@ -57,9 +63,7 @@ export default function SignIn() {
               className="w-full mt-2 px-4 py-2 border border-gray-600 rounded-md bg-gray-800 text-white focus:border-yellow-500 focus:ring-yellow-500"
             />
           </div>
-          {error && (
-            <p className="text-red-500 text-sm mb-4">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full px-4 py-2 bg-yellow-500 text-indigo-900 font-semibold rounded-md hover:bg-yellow-400 transition-colors"
