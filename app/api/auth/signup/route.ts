@@ -10,8 +10,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
-    const db = await connectToDatabase(); // Get the db instance
-    const usersCollection = db.collection("users"); // Access the `users` collection
+    const db = await connectToDatabase();
+
+    // Check if db is null before accessing collection
+    if (!db) {
+      return NextResponse.json({ message: "Database connection failed" }, { status: 500 });
+    }
+
+    const usersCollection = db.collection("users");
 
     // Check if the user already exists
     const existingUser = await usersCollection.findOne({ email });
@@ -22,17 +28,16 @@ export async function POST(req: Request) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
-    const newUser = {
+    // Insert new user into the database
+    const newUser = await usersCollection.insertOne({
       username,
       email,
       password: hashedPassword,
-      createdAt: new Date(),
-    };
+      credits: 3, // Default credits for new users
+    });
 
-    await usersCollection.insertOne(newUser);
-
-    return NextResponse.json({ message: "User created successfully" }, { status: 201 });
+    // Respond with success
+    return NextResponse.json({ message: "Signup successful", user: { id: newUser.insertedId, email } }, { status: 201 });
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ message: "Something went wrong" }, { status: 500 });

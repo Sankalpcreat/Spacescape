@@ -7,7 +7,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
+  const router = useRouter();  // Next.js router for navigation
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,14 +20,14 @@ export default function SignIn() {
       });
 
       if (res.ok) {
-        // Redirect to home page upon successful signin
-        router.push("/home");
+        console.log("Sign-in successful, redirecting to /home...");
+        router.push("/home");  // Redirect to the home page on success
       } else {
         const data = await res.json();
-        setError(data.message);  // Display error message from the response
+        setError(data.message);  // Set the error if any
       }
     } catch (err) {
-      console.error("Failed to signin:", err);
+      console.error("Failed to sign in:", err);
       setError("Something went wrong");
     }
   };
