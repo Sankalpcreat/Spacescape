@@ -21,7 +21,7 @@ export default function LandingPage() {
         </p>
         <button
           className="bg-yellow-500 text-indigo-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition mt-6"
-          onClick={() => (window.location.href = "/home")} // Redirects to /home page
+          onClick={() => (window.location.href = "/signin")} // Redirects to /home page
         >
           Start Designing
         </button>

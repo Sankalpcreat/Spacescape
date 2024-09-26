@@ -1,5 +1,5 @@
-import { usePathname } from "next/navigation";
-import { FolderOpen, Settings, HelpCircle, Home } from "lucide-react"; // Import icons for the navigation items
+import { usePathname, useRouter } from "next/navigation";
+import { FolderOpen, Settings, HelpCircle, Home ,LogOut} from "lucide-react"; // Import icons for the navigation items
 import Link from "next/link";
 import { classNames } from "@/utils";
  // Ensure you have a classNames utility
@@ -7,6 +7,7 @@ import { classNames } from "@/utils";
 
 export function DesktopSidebar() {
   const pathName = usePathname(); // Get the current path
+  const router = useRouter();
 
   // Define your navigation items
   const extendedNavigation = [
@@ -15,6 +16,15 @@ export function DesktopSidebar() {
     { name: 'Settings', href: '/settings', icon: Settings }, // Settings link with Settings icon
     { name: 'Help & Support', href: '/help', icon: HelpCircle }, // Help & Support with HelpCircle icon
   ];
+  const handleLogout = async () => {
+    const res = await fetch("/api/auth/logout", {
+      method: "GET",
+    });
+
+    if (res.ok) {
+      router.push("/"); // Redirect to landing page after logout
+    }
+  };
 
   return (
     <aside className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col bg-gradient-to-b from-purple-900 via-indigo-900 to-blue-900 text-white">
@@ -53,6 +63,16 @@ export function DesktopSidebar() {
               </ul>
             </li>
           </ul>
+           {/* Logout Button */}
+           <div className="border-t border-white/20 pt-6">
+            <button
+              onClick={handleLogout}
+              className="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-white/10 transition-all duration-300"
+            >
+              <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+              Logout
+            </button>
+          </div>
         </nav>
       </div>
     </aside>

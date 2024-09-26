@@ -25,8 +25,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid password" }, { status: 401 });
     }
 
-    // If successful, return user data (or set up a session if needed)
-    return NextResponse.json({ message: "Sign in successful", user: { id: user._id, email: user.email } }, { status: 200 });
+    // Set the session-token in a cookie on successful authentication
+    const response = NextResponse.json({ message: "Sign in successful", user: { id: user._id, email: user.email } }, { status: 200 });
+    response.cookies.set('session-token', 'YOUR_SESSION_TOKEN', { httpOnly: true, path: '/' });
+
+    return response;
   } catch (error) {
     console.error("Signin error:", error);
     return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
