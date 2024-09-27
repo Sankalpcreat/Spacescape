@@ -24,5 +24,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/home", "/projects", "/settings"], // Routes to protect
+  matcher: ["/home", "/projects", "/settings","/pricing"], // Routes to protect
 };

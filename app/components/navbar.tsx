@@ -27,7 +27,7 @@ export default function Navbar() {
             <Link href="/home" className="text-white hover:text-yellow-300 font-semibold transition-colors duration-200">
               Home
             </Link>
-            <Link href="/pricing" className="text-white hover:text-yellow-300 font-semibold transition-colors duration-200">
+            <Link href="/price" className="text-white hover:text-yellow-300 font-semibold transition-colors duration-200">
               Pricing
             </Link>
             <Link href="/signin" className="text-white hover:text-yellow-300 font-semibold transition-colors duration-200">
