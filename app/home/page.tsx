@@ -1,16 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { saveAs } from "file-saver";
+// For showing toast notifications
 import { PhotoIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { ErrorNotification } from "@/components/ErrorNotification"; 
-import { ActionPanel } from "@/components/ActionPanel"; 
-import { ImageDropzone } from "@/components/ImageDropzone"; 
-import { UploadedImage } from "@/components/UploadedImage"; 
-import { ImageOutput } from "@/components/ImageOutput"; 
-import { SelectMenu } from "../selectmenu"; 
+import { ErrorNotification } from "@/components/ErrorNotification";
+import { ActionPanel } from "@/components/ActionPanel";
+import { ImageDropzone } from "@/components/ImageDropzone";
+import { UploadedImage } from "@/components/UploadedImage";
+import { ImageOutput } from "@/components/ImageOutput";
+import { SelectMenu } from "../selectmenu";
 import { useImageUpload } from "../ hooks/useImageUpload";
 import ClientLayout from '../components/ClientLayout';
-import { SparklesCore } from "@/components/ui/sparkles"; // Import the sparkling background component
+import { SparklesCore } from "@/components/ui/sparkles";
+import { useToast } from "@/components/ui/use-toast"; // Import the sparkling background component
 
 const themes = ["Modern", "Vintage", "Minimalist", "Professional"];
 const rooms = ["Living Room", "Dining Room", "Bedroom", "Bathroom", "Office"];
@@ -42,43 +44,91 @@ export default function HomePage() {
   const [theme, setTheme] = useState<string>(themes[0]);
   const [room, setRoom] = useState<string>(rooms[0]);
   const [showMessage, setShowMessage] = useState(false);
+  const [credits, setCredits] = useState<number>(0); // Track user credits
+  const { toast, Toast } = useToast(); 
 
+  // Fetch user credits on component mount
+  useEffect(() => {
+    async function fetchUserCredits() {
+      try {
+        const res = await fetch("/api/get-credits");
+        const data = await res.json();
+
+        if (res.ok) {
+          setCredits(data.credits);
+          toast(`You have ${data.credits} credits left`); // Display the initial credits
+        } else {
+          setError("Unable to fetch credits.");
+        }
+      } catch (error) {
+        console.error("Error fetching credits:", error);
+        setError("Unable to fetch credits.");
+      }
+    }
+
+    fetchUserCredits();
+  }, []);
+  // Image submission logic
   async function submitImage() {
     if (!file) {
       setError("Please upload an image.");
+      toast("Please upload an image."); // Using the toast function directly
+      return;
+    }
+
+    if (credits <= 0) {
+      toast("You have run out of credits. Please purchase more."); 
       return;
     }
 
     setLoading(true);
     setShowMessage(true);
 
-    const response = await fetch("/api/replicate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ image: base64Image, theme, room }),
-    });
+    try {
+      const response = await fetch("/api/replicate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: base64Image, theme, room }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (result.error) {
-      setError(result.error);
+      if (result.error) {
+        setError(result.error);
+        toast(result.error); 
+        setLoading(false);
+        return;
+      }
+
+      setOutputImage(result.output[1]);
       setLoading(false);
-      return;
-    }
 
-    setOutputImage(result.output[1]);
-    setLoading(false);
+      // Deduct one credit after successful image generation
+      const newCredits = credits - 1;
+      setCredits(newCredits);
+
+      if (newCredits === 0) {
+        toast("You have run out of credits. Please purchase more.");
+      } else {
+        toast(`Image generated! You have ${newCredits} credits left.`);
+      }
+
+    } catch (error) {
+      console.error("Error generating image:", error);
+      toast("Something went wrong while generating the image.");
+      setLoading(false);
+    }
   }
-  
+
   setTimeout(() => {
     setShowMessage(false);
   }, 10000);
 
+  // Download generated image
   function downloadOutputImage() {
     if (outputImage) {
-      // Check if the outputImage is a valid URL or a base64 string
       const isBase64 = outputImage.startsWith("data:image");
       if (isBase64) {
         saveAs(outputImage, "output.png");
@@ -90,13 +140,10 @@ export default function HomePage() {
 
   return (
     <ClientLayout>
-      {/* Sparkling background */}
       <div className="relative w-full h-full min-h-screen">
-     
-
-        {/* Main Content */}
+       
         <main className="relative z-10 flex min-h-screen flex-col py-10 lg:pl-72">
-          {error ? <ErrorNotification errorMessage={error} /> : null}
+          {error && <ErrorNotification errorMessage={error} />}
           <ActionPanel isLoading={loading} submitImage={submitImage} />
 
           {showMessage && (
@@ -105,7 +152,7 @@ export default function HomePage() {
             </div>
           )}
 
-          <section className="mx-4  my-10 mt-9 flex w-fit flex-col space-y-8 lg:mx-6 lg:flex-row lg:space-x-8 lg:space-y-0 xl:mx-8">
+          <section className="mx-4 my-10 mt-9 flex w-fit flex-col space-y-8 lg:mx-6 lg:flex-row lg:space-x-8 lg:space-y-0 xl:mx-8">
             <SelectMenu
               label="Model"
               options={themes}
@@ -125,7 +172,6 @@ export default function HomePage() {
               <ImageDropzone
                 title="Drag 'n drop your image here or click to upload"
                 onImageDrop={onImageDrop}
-                 // Using the imported PhotoIcon
               />
             ) : (
               <UploadedImage
@@ -139,10 +185,11 @@ export default function HomePage() {
               title="AI-generated output goes here"
               downloadOutputImage={downloadOutputImage}
               outputImage={outputImage}
-              icon={SparklesIcon} // Using the imported SparklesIcon
+              icon={SparklesIcon}
               loading={loading}
             />
           </section>
+          <Toast />
         </main>
       </div>
     </ClientLayout>
