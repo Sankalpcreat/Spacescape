@@ -1,28 +1,23 @@
-// middleware.ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  // Log that middleware is running
-  console.log("Middleware is running");
+const secret = process.env.NEXTAUTH_SECRET;
 
-  // Get the session token from cookies
-  const sessionToken = req.cookies.get("session-token");
+export async function middleware(req: NextRequest) {
+  // Fetch the session token from the request
+  const token = await getToken({ req, secret });
 
-  // Log the session token value (if exists)
-  console.log("Session Token:", sessionToken);
-
-  // If no session token is found, redirect to the landing page
-  if (!sessionToken) {
-    console.log("No session token found, redirecting to landing page");
-    return NextResponse.redirect(new URL("/", req.url));
+  if (!token) {
+    // If there's no token, redirect the user to the sign-in page
+    return NextResponse.redirect(new URL('/signin', req.url));
   }
 
-  // Proceed to the requested page
-  console.log("Session token found, allowing access");
+  // Allow the user to access the requested page if authenticated
   return NextResponse.next();
 }
 
+// Protect specific routes
 export const config = {
-  matcher: ["/home", "/projects", "/settings","/pricing"], // Routes to protect
+  matcher: ['/home', '/projects', '/settings', '/pricing'], // Routes to protect
 };

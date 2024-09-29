@@ -1,7 +1,7 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { saveAs } from "file-saver";
-// For showing toast notifications
 import { PhotoIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { ErrorNotification } from "@/components/ErrorNotification";
 import { ActionPanel } from "@/components/ActionPanel";
@@ -11,16 +11,13 @@ import { ImageOutput } from "@/components/ImageOutput";
 import { SelectMenu } from "../selectmenu";
 import { useImageUpload } from "../ hooks/useImageUpload";
 import ClientLayout from '../components/ClientLayout';
-import { SparklesCore } from "@/components/ui/sparkles";
-import { useToast } from "@/components/ui/use-toast"; // Import the sparkling background component
+import { useToast } from "@/components/ui/use-toast"; // Use your custom toast hook
 
 const themes = ["Modern", "Vintage", "Minimalist", "Professional"];
 const rooms = ["Living Room", "Dining Room", "Bedroom", "Bathroom", "Office"];
 
 function fileSize(size: number): string {
-  if (size === 0) {
-    return "0 Bytes";
-  }
+  if (size === 0) return "0 Bytes";
   const k = 1024;
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(size) / Math.log(k));
@@ -45,7 +42,7 @@ export default function HomePage() {
   const [room, setRoom] = useState<string>(rooms[0]);
   const [showMessage, setShowMessage] = useState(false);
   const [credits, setCredits] = useState<number>(0); // Track user credits
-  const { toast, Toast } = useToast(); 
+  const { toast, Toast } = useToast(); // Use the toast hook
 
   // Fetch user credits on component mount
   useEffect(() => {
@@ -53,31 +50,36 @@ export default function HomePage() {
       try {
         const res = await fetch("/api/get-credits");
         const data = await res.json();
-
+  
+        console.log("Credits API Response:", data); // Debugging response
+  
         if (res.ok) {
           setCredits(data.credits);
-          toast(`You have ${data.credits} credits left`); // Display the initial credits
+          toast(`You have ${data.credits} credits left`); // Show initial credits
         } else {
           setError("Unable to fetch credits.");
+          toast("Unable to fetch credits.");
         }
       } catch (error) {
         console.error("Error fetching credits:", error);
         setError("Unable to fetch credits.");
+        toast("Unable to fetch credits.");
       }
     }
-
+  
     fetchUserCredits();
   }, []);
+
   // Image submission logic
   async function submitImage() {
     if (!file) {
       setError("Please upload an image.");
-      toast("Please upload an image."); // Using the toast function directly
+      toast("Please upload an image."); // Show toast message for missing image
       return;
     }
 
     if (credits <= 0) {
-      toast("You have run out of credits. Please purchase more."); 
+      toast("You have run out of credits. Please purchase more.");
       return;
     }
 
@@ -97,7 +99,7 @@ export default function HomePage() {
 
       if (result.error) {
         setError(result.error);
-        toast(result.error); 
+        toast(result.error);
         setLoading(false);
         return;
       }
@@ -114,7 +116,6 @@ export default function HomePage() {
       } else {
         toast(`Image generated! You have ${newCredits} credits left.`);
       }
-
     } catch (error) {
       console.error("Error generating image:", error);
       toast("Something went wrong while generating the image.");
@@ -141,7 +142,6 @@ export default function HomePage() {
   return (
     <ClientLayout>
       <div className="relative w-full h-full min-h-screen">
-       
         <main className="relative z-10 flex min-h-screen flex-col py-10 lg:pl-72">
           {error && <ErrorNotification errorMessage={error} />}
           <ActionPanel isLoading={loading} submitImage={submitImage} />

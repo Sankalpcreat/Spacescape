@@ -1,34 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-export default function Signup() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function SignUp() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Handle traditional sign-up
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),  // Correct the payload
-      });
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
 
-      if (res.ok) {
-        router.push("/signin");  // Redirect to sign-in page upon successful signup
-      } else {
-        const data = await res.json();
-        setError(data.message);  // Display error message from the response
-      }
-    } catch (err) {
-      console.error("Failed to signup:", err);
-      setError("Something went wrong");
+    if (res.ok) {
+      router.push('/signin'); // Redirect to the sign-in page after signup
+    } else {
+      const data = await res.json();
+      setError(data.message);
     }
   };
 
@@ -36,7 +33,7 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
       <div className="bg-black bg-opacity-60 backdrop-blur-lg rounded-lg p-8 shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-white mb-8">Create Your Account</h2>
-        <form onSubmit={handleSignup}>
+        <form onSubmit={handleSignUp}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-300">Username</label>
             <input
@@ -72,8 +69,21 @@ export default function Signup() {
             Sign Up
           </button>
         </form>
+
+        <div className="mt-6 flex flex-col items-center">
+          <p className="text-gray-400 text-sm mb-4">Or sign up with:</p>
+          {/* Google Sign-Up Button */}
+          <button
+            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500 transition-colors"
+            onClick={() => signIn('google')}
+          >
+            Sign up with Google
+          </button>
+        </div>
+
         <p className="text-gray-400 text-sm text-center mt-4">
-          Already have an account? <a href="/signin" className="text-yellow-500 hover:underline">Sign In</a>
+          Already have an account?{' '}
+          <a href="/signin" className="text-yellow-500 hover:underline">Sign In</a>
         </p>
       </div>
     </div>

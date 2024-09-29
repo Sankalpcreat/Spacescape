@@ -1,7 +1,9 @@
 import { usePathname, useRouter } from "next/navigation";
 import { FolderOpen, Settings, HelpCircle, Home, LogOut, DollarSign } from "lucide-react"; // Added DollarSign for Pricing Icon
 import Link from "next/link";
-import { classNames } from "@/utils"; // Ensure you have a classNames utility
+import { classNames } from "@/utils";
+import { signOut } from "next-auth/react";
+// Use signOut from NextAuth
 
 export function DesktopSidebar() {
   const pathName = usePathname(); // Get the current path
@@ -15,15 +17,9 @@ export function DesktopSidebar() {
     { name: 'Pricing', href: '/pricing', icon: DollarSign }, // Added Pricing link with DollarSign icon
     { name: 'Help & Support', href: '/help', icon: HelpCircle }, // Help & Support with HelpCircle icon
   ];
-
   const handleLogout = async () => {
-    const res = await fetch("/api/auth/logout", {
-      method: "GET",
-    });
-
-    if (res.ok) {
-      router.push("/"); // Redirect to landing page after logout
-    }
+    await signOut({ redirect: false }); // Signs out from Google and NextAuth session
+    router.push('/'); // Redirect to the landing page after logout
   };
 
   return (
