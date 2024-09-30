@@ -3,44 +3,69 @@ import Replicate from 'replicate';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import connectToDatabase from '../../lib/mongodb';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: Request) {
   try {
     const req = await request.json();
-    const image = req.image;
-    const theme = req.theme;
-    const room = req.room;
+    const { image, theme, room } = req;
 
-    // Pass the request to getServerSession to properly retrieve session info
-    const session = await getServerSession({ req: request, authOptions });
-
-    // If there's no valid session, return unauthorized error
-    if (!session) {
-      console.error("Session not found or unauthorized.");
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    // Get authenticated session
+    const session = await getServerSession({ req: request, ...authOptions });
 
     const db = await connectToDatabase();
     const usersCollection = db.collection("users");
+    const guestUsersCollection = db.collection("guestUsers");
 
-    // Find user by email from the session
-    const user = await usersCollection.findOne({ email: session.user?.email });
-    if (!user) {
-      console.error(`User not found for email: ${session.user?.email}`);
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    let user, credits;
+    
+    // Check for guest session
+    const guestSession = request.headers.get('cookie')?.match(/guest-session=([^;]+)/)?.[1];
+
+    if (guestSession) {
+      // Handle guest session
+      const guestUser = await guestUsersCollection.findOne({ sessionId: guestSession });
+
+      if (!guestUser) {
+        return NextResponse.json({ message: 'Guest session not found' }, { status: 404 });
+      }
+
+      credits = guestUser.credits;
+
+      // If the guest user has no credits, return an error
+      if (credits <= 0) {
+        return NextResponse.json({ message: 'Insufficient credits' }, { status: 403 });
+      }
+
+      // Deduct one credit for guest users
+      await guestUsersCollection.updateOne({ sessionId: guestSession }, { $set: { credits: credits - 1 } });
+    } else if (session && session.user?.email) {
+      // Handle authenticated user session
+      user = await usersCollection.findOne({ email: session.user.email });
+
+      if (!user) {
+        return NextResponse.json({ message: 'User not found' }, { status: 404 });
+      }
+
+      credits = user.credits;
+
+      // If the authenticated user has no credits, return an error
+      if (credits <= 0) {
+        return NextResponse.json({ message: 'Insufficient credits' }, { status: 403 });
+      }
+
+      // Deduct one credit for authenticated users
+      await usersCollection.updateOne({ email: session.user.email }, { $set: { credits: credits - 1 } });
+    } else {
+      // If no session is found, return unauthorized
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if the user has enough credits
-    if (user.credits <= 0) {
-      console.warn(`User ${user.email} has insufficient credits.`);
-      return NextResponse.json({ message: "Insufficient credits" }, { status: 403 });
-    }
-
+    // Call the Replicate API to generate an image
     const replicate = new Replicate({
       auth: process.env.REPLICATE_API_TOKEN as string,
     });
 
-    // Model and input preparation for Replicate
     const model = 'jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b';
     const input = {
       image,
@@ -48,22 +73,16 @@ export async function POST(request: Request) {
       a_prompt: `best quality, extremely detailed, photo from Pinterest, interior, cinematic photo, ultra-detailed, ultra-realistic, award-winning`,
     };
 
-    // Execute Replicate API call
     const output = await replicate.run(model, { input });
 
     if (!output) {
-      console.error("Replicate API failed to generate output.");
       return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
     }
 
-    // Deduct one credit after successful image generation
-    user.credits -= 1;
-    await usersCollection.updateOne({ _id: user._id }, { $set: { credits: user.credits } });
-
-    return NextResponse.json({ output, credits: user.credits }, { status: 201 });
-
+    // Return the generated image and remaining credits
+    return NextResponse.json({ output, credits: credits - 1 }, { status: 201 });
   } catch (error) {
-    console.error('Error in replicate API or processing:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('Error during the image generation process:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }

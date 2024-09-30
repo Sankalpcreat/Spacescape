@@ -6,13 +6,11 @@ import connectToDatabase from '../../../lib/mongodb';
 
 export const authOptions = {
   providers: [
-    // Google Authentication
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
 
-    // Traditional Email/Password Authentication
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -43,35 +41,50 @@ export const authOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async jwt({ token, user, account, profile }) {
+      console.log('JWT Callback - Token:', token);
+      if (account && profile) {
+        token.id = profile.sub; // Google user ID
+        token.email = profile.email;
+        token.name = profile.name || profile.email;
+        token.picture = profile.picture;
+        console.log('JWT Callback - Google Profile:', profile);
       }
+      if (user) token.id = user.id; // Traditional login user ID
       return token;
     },
 
     async session({ session, token }) {
+      console.log('Session Callback - Token:', token);
       const db = await connectToDatabase();
       const usersCollection = db.collection('users');
-
-      // Check if user exists in the database
-      let user = await usersCollection.findOne({ email: session.user?.email });
-
+    
+      // Check if the user exists in the database
+      let user = await usersCollection.findOne({ email: token.email });
+    
+      // If the user doesn't exist, create a new user (Google sign-in)
       if (!user) {
-        // If user doesn't exist, create a new entry for Google sign-in
         const newUser = {
-          email: session.user?.email,
-          name: session.user?.name,
-          image: session.user?.image,
-          credits: 5, // Default credits for new users
+          email: token.email,
+          name: token.name|| token.email,
+          image: token.picture,
+          credits: 3,  // Default credits for new users
         };
-
+        if (newUser.name) {
+          newUser.username = newUser.name.replace(/\s/g, "").toLowerCase(); // Generate username if needed
+        }
         const result = await usersCollection.insertOne(newUser);
-        user = result.ops[0]; // Get the inserted user
+        user = await usersCollection.findOne({ _id: result.insertedId });
       }
-
+    
+      // Set user information in the session
       session.user.id = user._id;
-      session.user.credits = user.credits; // Pass credits to the session
+      session.user.credits = user.credits;
+      session.user.name = user.name;
+      session.user.email = user.email;
+      session.user.image = user.image;
+    
+      console.log('Session Callback - Session:', session);
       return session;
     },
   },

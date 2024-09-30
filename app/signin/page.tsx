@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import GuestLoginForm from "@/components/GuestLoginForm";
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -31,6 +32,7 @@ export default function SignIn() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900">
       <div className="bg-black bg-opacity-60 backdrop-blur-lg rounded-lg p-8 shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-white mb-8">Sign In</h2>
+        
         <form onSubmit={handleSignIn}>
           {/* Traditional sign-in form */}
           <div className="mb-4">
@@ -59,16 +61,22 @@ export default function SignIn() {
           </button>
         </form>
 
-        {/* Google sign-in button */}
+        {/* Social and Guest Login Options */}
         <div className="mt-6 flex flex-col items-center">
           <p className="text-gray-400 text-sm mb-4">Or sign in with:</p>
+
+          {/* Google Sign-In */}
           <button
-            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500 transition-colors"
-            onClick={() => signIn('google', { callbackUrl: '/home' })}
+            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500 transition-colors mb-4"
+            onClick={() => signIn("google", { callbackUrl: "/home" })}
           >
             Sign in with Google
           </button>
+
+          {/* Guest Login Button */}
+          <GuestLoginForm /> {/* Guest login button inside this component */}
         </div>
+
       </div>
     </div>
   );
