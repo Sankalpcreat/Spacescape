@@ -4,12 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
 const images = [
-  '/images/original1.jpg',
-  '/images/original2.jpg',
-  '/images/original3.jpg',
-  '/images/generated1.jpg',
-  '/images/generated2.webp',
-  '/images/generated3.jpg',
+  { src: '/images/t1.png', label: 'Bedroom' },
+  { src: '/images/t2.png', label: 'Living Room' },
+  { src: '/images/t3.jpg', label: 'Dining Room' },
+  { src: '/images/t4.png', label: 'Bathroom' },
+  { src: '/images/t5.png', label: 'Office' },
 ];
 
 export default function InfiniteScroll() {
@@ -60,23 +59,50 @@ export default function InfiniteScroll() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* First scrolling section */}
       <div
         ref={scrollRef1}
         className="flex overflow-x-hidden mb-4"
       >
-        {[...images, ...images].map((src, index) => (
-          <div key={index} className="flex-shrink-0 w-[300px] mx-2">
-            <Image src={src} alt={`Scrolling image ${index + 1}`} width={300} height={200} className="rounded-lg" />
+        {[...images, ...images].map((item, index) => (
+          <div key={index} className="flex-shrink-0 w-[300px] mx-2 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+            <div className="relative z-10">
+              <div className="text-center mb-2 text-lg font-semibold text-gray-800">
+                {item.label}
+              </div>
+              <Image
+                src={item.src}
+                alt={`Scrolling image ${index + 1}`}
+                width={300}
+                height={200}
+                className="rounded-lg"
+              />
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Second scrolling section */}
       <div
         ref={scrollRef2}
         className="flex overflow-x-hidden"
       >
-        {[...images, ...images].reverse().map((src, index) => (
-          <div key={index} className="flex-shrink-0 w-[300px] mx-2">
-            <Image src={src} alt={`Scrolling image ${index + 1}`} width={300} height={200} className="rounded-lg" />
+        {[...images, ...images].reverse().map((item, index) => (
+          <div key={index} className="flex-shrink-0 w-[300px] mx-2 relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+            <div className="relative z-10">
+              <div className="text-center mb-2 text-lg font-semibold text-gray-800">
+                {item.label}
+              </div>
+              <Image
+                src={item.src}
+                alt={`Scrolling image ${index + 1}`}
+                width={300}
+                height={200}
+                className="rounded-lg"
+              />
+            </div>
           </div>
         ))}
       </div>

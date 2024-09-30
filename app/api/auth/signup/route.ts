@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     username,
     email,
     password: hashedPassword,
-    credits: 3, // Default credits for new users
+    credits: 5, // Default credits for new users
   });
 
   return NextResponse.json({ message: 'Signup successful' }, { status: 201 });

@@ -5,9 +5,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Rocket, Camera, Wand2, Stars } from "lucide-react";
+import InfiniteScroll from "@/components/infinite-scroll";
 import { HeroScrollDemo } from "@/components/ui/hero-scroll-demo";
 import Navbar from "@/components/navbar";
-import InfiniteScroll from "@/components/infinite-scroll"; // Import the InfiniteScroll component
 
 export default function LandingPage() {
   const [showAfter, setShowAfter] = useState(false);
@@ -18,12 +18,12 @@ export default function LandingPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-12 md:py-24">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4">
+      <div className="container mx-auto px-4 py-12 md:py-16"> {/* Reduced padding on the bottom */}
+        <div className="text-center mb-4"> {/* Reduced bottom margin */}
+          <h1 className="text-5xl md:text-7xl font-black mb-4 text-black"> {/* Bold and darkened text */}
             Space<span className="text-blue-600">Scape</span>
           </h1>
-          <p className="text-xl text-slate-600">
+          <p className="text-xl text-black font-black"> {/* Bold and darkened text */}
             Redesign your space with cosmic intelligence
           </p>
         </div>
@@ -44,48 +44,51 @@ export default function LandingPage() {
               Start Your Transformation <Rocket className="ml-2 h-5 w-5" />
             </Button>
           </div>
-          <div className="md:w-1/2 relative">
-            <div className="relative h-full w-full rounded-lg overflow-hidden group bg-white shadow-lg hover:shadow-2xl transition-all duration-300">
-              <div className="relative h-[450px] w-full">
-                <Image
-                  src="/images/original5.jpg"
-                  alt="Regular Earth room"
-                  layout="fill"
-                  objectFit="cover"
-                  className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
-                />
-                <Image
-                  src="/images/generated5.png"
-                  alt="Cosmic-themed room redesign"
-                  layout="fill"
-                  objectFit="cover"
-                  className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-100' : 'opacity-0'}`}
-                />
-              </div>
-              <div className="absolute top-2 left-2 bg-blue-600 text-white py-1 px-3 rounded-full text-sm font-semibold shadow">
-                {showAfter ? 'After' : 'Before'}
-              </div>
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center bg-white rounded-full p-2 shadow-md">
-                <span className="mr-2 text-sm font-medium text-slate-600">Earth</span>
-                <Switch
-                  checked={showAfter}
-                  onCheckedChange={setShowAfter}
-                  className="data-[state=checked]:bg-blue-600"
-                />
-                <span className="ml-2 text-sm font-medium text-slate-600">Cosmic</span>
-              </div>
-            </div>
-          </div>
+          <div className="md:w-1/2 lg:w-[60%] w-full relative ml-auto"> {/* Increased width for large screens and shifted to the right */}
+  <div className="relative w-full h-auto rounded-lg overflow-hidden group bg-white shadow-lg hover:shadow-2xl transition-all duration-300">
+    <div className="relative w-full h-64 sm:h-80 md:h-[450px]"> {/* Responsive height for different screens */}
+      <Image
+        src="/images/original5.jpg"
+        alt="Regular Earth room"
+        layout="fill"
+        objectFit="cover"
+        className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
+      />
+      <Image
+        src="/images/generated5.png"
+        alt="Cosmic-themed room redesign"
+        layout="fill"
+        objectFit="cover"
+        className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
+    <div className="absolute top-2 left-2 bg-blue-600 text-white py-1 px-3 rounded-full text-sm font-semibold shadow">
+      {showAfter ? 'After' : 'Before'}
+    </div>
+    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center bg-white rounded-full p-2 shadow-md">
+      <span className="mr-2 text-sm font-medium text-slate-600">Before</span>
+      <Switch
+        checked={showAfter}
+        onCheckedChange={setShowAfter}
+        className="data-[state=checked]:bg-blue-600"
+      />
+      <span className="ml-2 text-sm font-medium text-slate-600">After</span>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
 
       {/* Infinite Scroll Section */}
-      <InfiniteScroll /> {/* Inserted InfiniteScroll component */}
+      <div className="mt-4"> {/* Reduced margin between Hero and Infinite Scroll */}
+        <InfiniteScroll />
+      </div>
 
       {/* Scroll Animation Section */}
       <section className="w-full max-w-6xl mt-20 mx-auto">
-        <HeroScrollDemo />
-      </section>
+    <HeroScrollDemo />
+  </section>
 
       {/* How It Works Section */}
       <div className="mt-16 text-center">

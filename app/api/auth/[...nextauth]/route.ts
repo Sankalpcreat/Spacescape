@@ -63,7 +63,7 @@ export const authOptions = {
           email: session.user?.email,
           name: session.user?.name,
           image: session.user?.image,
-          credits: 3, // Default credits for new users
+          credits: 5, // Default credits for new users
         };
 
         const result = await usersCollection.insertOne(newUser);
