@@ -47,20 +47,18 @@ export default function LandingPage() {
           <div className="md:w-1/2 lg:w-[60%] w-full relative ml-auto"> {/* Increased width for large screens and shifted to the right */}
   <div className="relative w-full h-auto rounded-lg overflow-hidden group bg-white shadow-lg hover:shadow-2xl transition-all duration-300">
     <div className="relative w-full h-64 sm:h-80 md:h-[450px]"> {/* Responsive height for different screens */}
-      <Image
-        src="/images/original5.jpg"
-        alt="Regular Earth room"
-        layout="fill"
-        objectFit="cover"
-        className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
-      />
-      <Image
-        src="/images/generated5.png"
-        alt="Cosmic-themed room redesign"
-        layout="fill"
-        objectFit="cover"
-        className={`absolute inset-0 rounded-lg transition-opacity duration-500 ${showAfter ? 'opacity-100' : 'opacity-0'}`}
-      />
+    <Image
+      src="/images/original5.jpg"
+      alt="Regular Earth room"
+      fill
+      className={`absolute inset-0 rounded-lg object-cover transition-opacity duration-500 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
+    />
+    <Image
+      src="/images/generated5.png"
+      alt="Cosmic-themed room redesign"
+      fill
+      className={`absolute inset-0 rounded-lg object-cover transition-opacity duration-500 ${showAfter ? 'opacity-100' : 'opacity-0'}`}
+    />
     </div>
     <div className="absolute top-2 left-2 bg-blue-600 text-white py-1 px-3 rounded-full text-sm font-semibold shadow">
       {showAfter ? 'After' : 'Before'}
