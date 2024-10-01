@@ -51,11 +51,11 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-
+  secret: process.env.NEXTAUTH_SECRET!,
   session: {
-    strategy: 'jwt', // Use JWT for session management
+    strategy: 'jwt', 
   },
-  secret: process.env.NEXTAUTH_SECRET,
+ 
 
   callbacks: {
     async jwt({ token, user, account, profile }) {
