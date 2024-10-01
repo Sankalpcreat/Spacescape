@@ -70,16 +70,7 @@ export default function SignUp() {
           </button>
         </form>
 
-        <div className="mt-6 flex flex-col items-center">
-          <p className="text-gray-400 text-sm mb-4">Or sign up with:</p>
-          {/* Google Sign-Up Button */}
-          <button
-            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500 transition-colors"
-            onClick={() => signIn('google')}
-          >
-            Sign up with Google
-          </button>
-        </div>
+      
 
         <p className="text-gray-400 text-sm text-center mt-4">
           Already have an account?{' '}
