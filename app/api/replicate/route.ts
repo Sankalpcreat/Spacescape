@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import Replicate from 'replicate';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '../auth/auth-options';
 import connectToDatabase from '../../lib/mongodb';
 import { v4 as uuidv4 } from 'uuid';
-
+export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const req = await request.json();

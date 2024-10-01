@@ -53,6 +53,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/file-saver": "^2.0.5",
     "@types/next-auth": "^3.13.0",
+    "@types/uuid": "^10.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "prettier": "^2.8.8",

@@ -3,6 +3,15 @@ import connectToDatabase from '../../../lib/mongodb';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { setCookie } from 'cookies-next';
 import { v4 as uuidv4 } from 'uuid';
+export const dynamic = 'force-dynamic';
+interface GuestUser {
+  sessionId: string;
+  ip: string;
+  credits: number;
+  createdAt: Date;
+}
+
+
 
 const rateLimiter = new RateLimiterMemory({
   points: 5, // 5 requests per IP
@@ -27,12 +36,12 @@ export async function POST(req: Request) {
 
     // Create a new guest session
    // Create a new guest session
-const guestSession = {
-  sessionId: uuidv4(),
-  ip: clientIP,
-  credits: 1, // Ensure this value is set
-  createdAt: new Date(),
-};
+   const guestSession: GuestUser = {
+    sessionId: uuidv4(),
+    ip: clientIP,
+    credits: 1,
+    createdAt: new Date(),
+  };
 
 await usersCollection.insertOne(guestSession);
 

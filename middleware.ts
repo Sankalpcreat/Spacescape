@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
 
   // Check if a guest session exists
   if (guestSession) {
-    console.log('Guest session active, allowing guest user access');
+
 
     // Allow access to the homepage for guest users
     if (url.pathname === '/home') {
@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
 
     // If the guest user tries to access restricted pages, delete the guest session token
     if (['/projects', '/settings', '/pricing'].includes(url.pathname)) {
-      console.log('Deleting guest session and redirecting to sign-in');
+
       
       // Create a response and remove the guest session cookie
       const response = NextResponse.redirect(new URL('/signin', req.url));
@@ -39,7 +39,7 @@ export async function middleware(req: NextRequest) {
 
   // If the user is authenticated, allow full access
   if (token) {
-    console.log('Authenticated user session active, allowing access');
+
     return NextResponse.next();
   }
 

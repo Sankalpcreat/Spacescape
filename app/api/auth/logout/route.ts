@@ -1,14 +1,11 @@
-import { NextResponse } from "next/server";
-import { signOut } from "next-auth/react";
-
-export async function GET() {
-  const response = NextResponse.redirect("http://localhost:3000/signin");
-  
-  // Clear the custom session-token cookie (if you are using it for traditional sign-in)
- 
-
-  // Perform the NextAuth signOut to clear session
-  await signOut({ callbackUrl: "http://localhost:3000/signin" });
-
-  return response;
+import { NextResponse } from 'next/server';
+import { signOut } from 'next-auth/react';
+export const dynamic = 'force-dynamic';
+export async function POST(req: Request) {
+  try {
+    await signOut({ redirect: false });
+    return NextResponse.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    return NextResponse.json({ message: 'Logout failed' }, { status: 500 });
+  }
 }
