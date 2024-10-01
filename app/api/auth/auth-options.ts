@@ -55,6 +55,7 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: 'jwt', // Use JWT for session management
   },
+  secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
     async jwt({ token, user, account, profile }) {
