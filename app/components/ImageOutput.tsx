@@ -52,11 +52,11 @@ export function ImageOutput({
 
         {/* Display Output Image */}
         {!loading && outputImage ? (
-          <img
-            src={outputImage}
-            alt="output"
-            className="h-full w-full object-cover rounded-lg"  // Ensure full height and width coverage
-          />
+         <img
+         src={outputImage}
+         alt="output"
+         className="h-full w-full object-cover rounded-lg" // Ensure full height and width coverage
+       />
         ) : null}
       </div>
 

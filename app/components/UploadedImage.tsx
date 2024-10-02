@@ -18,11 +18,12 @@ export function UploadedImage({
     <section className="relative min-h-[400px] w-full rounded-lg">
       {/* Image Button */}
       <button className="relative block h-full w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-        <img
+              <img
           src={URL.createObjectURL(image)}
           alt={image.name}
-          className="h-full w-full object-cover rounded-lg" // Ensure the image covers the whole card
+          className="h-full w-full object-cover rounded-lg" // Use object-cover to ensure the image fills the box
         />
+
       </button>
 
       {/* Trash Button for Deletion */}
