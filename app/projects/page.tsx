@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel"; // Assuming you have a Carousel component
 import ClientLayout from '../components/ClientLayout';
-import { SparklesCore } from "@/components/ui/sparkles";
+
 type ProjectContentProps = {
   original: string;  // Define the type of 'original' based on your data
   generated: string; // Define the type of 'generated' based on your data
@@ -87,7 +87,7 @@ export default function ProjectsPage() {
 
   return (
     <ClientLayout>
-      {/* Add SparklesCore for the sparkling effect */}
+     
     
 
       <div className="w-full h-full py-20 relative z-10">
