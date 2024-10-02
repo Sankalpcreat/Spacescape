@@ -8,7 +8,7 @@ import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Moon, Sun, Bell, Globe, CreditCard, Save } from 'lucide-react';
 import ClientLayout from '../components/ClientLayout';
-import { SparklesCore } from "@/components/ui/sparkles"; // Add the sparkles component
+// Add the sparkles component
 
 export default function SpaceSettings() {
   const [darkMode, setDarkMode] = useState(true);
