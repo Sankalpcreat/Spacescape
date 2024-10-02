@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -8,10 +9,16 @@ import { Rocket, Camera, Wand2, Stars } from "lucide-react";
 import InfiniteScroll from "@/components/infinite-scroll";
 import { HeroScrollDemo } from "@/components/ui/hero-scroll-demo";
 import Navbar from "@/components/navbar";
+import { useRouter } from 'next/navigation'; 
 
 export default function LandingPage() {
   const [showAfter, setShowAfter] = useState(false);
+  const router = useRouter(); 
+  const handleButtonClick = () => {
+    router.push('/signin'); // Redirect to the sign-in page
+  };
 
+  
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 text-slate-800">
       {/* Add the Navbar */}
@@ -24,14 +31,14 @@ export default function LandingPage() {
             Space<span className="text-blue-600">Scape</span>
           </h1>
           <p className="text-xl text-black font-black"> {/* Bold and darkened text */}
-            Redesign your space with cosmic intelligence
+            Redesign your space with Interior Space with Artificial Intelligence
           </p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
             <div className="bg-blue-100 text-blue-800 text-sm py-2 px-4 rounded-full inline-block mb-4">
-              Over <span className="text-blue-600 font-semibold">1 million</span> spaces transformed
+            Revolutionize <span className="text-blue-600 font-semibold">Your Space</span>with Us!
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Your AI-powered <br />
@@ -40,7 +47,7 @@ export default function LandingPage() {
             <p className="text-slate-600 mb-6">
               Transform your living space into a cosmic oasis with our cutting-edge AI technology.
             </p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-lg font-semibold">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-lg font-semibold" onClick={handleButtonClick}   >
               Start Your Transformation <Rocket className="ml-2 h-5 w-5" />
             </Button>
           </div>

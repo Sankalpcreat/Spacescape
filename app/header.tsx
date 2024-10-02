@@ -28,7 +28,7 @@ export function Header({ onClick }: HeaderProps) {
       </div>
       <div className="text-gray-400">
         {/* Display current path */}
-        {pathName === "/" ? "Home" : `Current Path: ${pathName}`}
+        {pathName === "/" ? "Home" : '' }
       </div>
     </header>
   );

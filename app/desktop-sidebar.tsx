@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { FolderOpen, Settings, HelpCircle, Home, LogOut, DollarSign } from "lucide-react";
+import { FolderOpen, Settings, Home, LogOut, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { classNames } from "@/utils";
 import { signOut } from "next-auth/react";
@@ -15,7 +15,6 @@ export function DesktopSidebar() {
     { name: 'Projects', href: '/projects', icon: FolderOpen },
     { name: 'Settings', href: '/settings', icon: Settings },
     { name: 'Pricing', href: '/pricing', icon: DollarSign },
-    { name: 'Help & Support', href: '/help', icon: HelpCircle },
   ];
 
   const handleLogout = async () => {
@@ -73,9 +72,12 @@ export function DesktopSidebar() {
           <div className="border-t border-white/20 pt-6">
             <button
               onClick={handleLogout}
-              className="group flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-white/10 transition-all duration-300"
+              className={classNames(
+                "group flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white",
+                "hover:bg-transparent hover:text-white transition-all duration-300"
+              )}
             >
-              <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+              <LogOut className="h-5 w-5 shrink-0 text-white" aria-hidden="true" /> {/* Explicitly set icon color */}
               <span className={`${isHovered ? 'block' : 'hidden'} transition-all duration-300`}>
                 Logout
               </span>

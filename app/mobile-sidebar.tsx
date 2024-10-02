@@ -1,11 +1,12 @@
 import { Fragment } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Transition } from "@headlessui/react";
 import { Dialog } from "@headlessui/react";
-import { FolderOpen, Settings, HelpCircle } from "lucide-react"; // Import new icons
+import { FolderOpen, Settings, Home, LogOut, DollarSign } from "lucide-react";
 import { classNames } from "@/utils";
 import Link from "next/link";
+import { signOut } from "next-auth/react"; // Import signOut from next-auth/react
 
 type SidebarProps = {
   sidebarOpen: boolean;
@@ -14,13 +15,20 @@ type SidebarProps = {
 
 export function MobileSidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const pathName = usePathname(); // Get the current path
+  const router = useRouter(); // Use useRouter for navigation
 
   const extendedNavigation = [
-    { name: 'Home', href: '/home', icon: FolderOpen }, // Adjust as needed
+    { name: 'Home', href: '/home', icon: FolderOpen },
     { name: 'Projects', href: '/projects', icon: FolderOpen },
     { name: 'Settings', href: '/settings', icon: Settings },
-    { name: 'Help & Support', href: '/help', icon: HelpCircle }
+    { name: 'Pricing', href: '/pricing', icon: DollarSign },
+    { name: 'Logout', href: '#', icon: LogOut }, // Logout option
   ];
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // Sign out without redirecting
+    router.push('/'); // Redirect to home page after signing out
+  };
 
   return (
     <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -83,18 +91,33 @@ export function MobileSidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                       <ul role="list" className="-mx-2 space-y-1">
                         {extendedNavigation.map((item) => (
                           <li key={item.name}>
-                            <Link
-                              href={item.href}
-                              className={classNames(
-                                pathName === item.href
-                                  ? "bg-white/20 text-white"
-                                  : "text-gray-400 hover:bg-white/10 hover:text-white",
-                                "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 transition-all duration-300"
-                              )}
-                            >
-                              <item.icon className="h-5 w-5 shrink-0 mr-2" aria-hidden="true" />
-                              {item.name}
-                            </Link>
+                            {item.name === 'Logout' ? (
+  <button
+    onClick={handleLogout}
+    className={classNames(
+      pathName === item.href
+        ? "bg-white/20 text-white" // Active style
+        : "text-gray-400 hover:bg-transparent hover:text-white", // Remove green and use transparent background
+      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 transition-all duration-300 w-full text-left"
+    )}
+  >
+    <item.icon className="h-5 w-5 shrink-0 mr-2" aria-hidden="true" />
+    {item.name}
+  </button>
+) : (
+  <Link
+    href={item.href}
+    className={classNames(
+      pathName === item.href
+        ? "bg-white/20 text-white"
+        : "text-gray-400 hover:bg-white/10 hover:text-white",
+      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 transition-all duration-300"
+    )}
+  >
+    <item.icon className="h-5 w-5 shrink-0 mr-2" aria-hidden="true" />
+    {item.name}
+  </Link>
+)}
                           </li>
                         ))}
                       </ul>
