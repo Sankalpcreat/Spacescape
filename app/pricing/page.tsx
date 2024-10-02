@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +14,7 @@ import { Rocket, Star, Zap } from "lucide-react";
 
 export default function PricingPage() {
   const [loading, setLoading] = useState(false);
+  const [workInProgress, setWorkInProgress] = useState<string | null>(null);
 
   const pricingPlans = [
     {
@@ -41,26 +41,13 @@ export default function PricingPage() {
     },
   ];
 
-  const handlePurchase = async (planName: string, planPrice: number) => {
+  const handlePurchase = (planName: string) => {
     setLoading(true);
-    try {
-      const res = await fetch("/api/checkout/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planName, planPrice }),
-      });
-
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url; // Redirect to Stripe Checkout
-      } else {
-        alert("Failed to create Stripe session.");
-      }
-    } catch (error) {
-      console.error("Error during purchase:", error);
-    } finally {
+    setWorkInProgress(`Work in Progress for ${planName}`);
+    setTimeout(() => {
       setLoading(false);
-    }
+      setWorkInProgress(null); // Reset the message after a delay
+    }, 2000); // Simulate a delay before resetting the state
   };
 
   return (
@@ -109,10 +96,12 @@ export default function PricingPage() {
               <CardFooter>
                 <Button
                   className="w-full bg-yellow-500 text-indigo-900 hover:bg-yellow-400"
-                  onClick={() => handlePurchase(plan.name, plan.price)}
+                  onClick={() => handlePurchase(plan.name)}
                   disabled={loading}
                 >
-                  {loading ? "Processing..." : "Purchase"}
+                  {loading && workInProgress === `Work in Progress for ${plan.name}`
+                    ? "Work in Progress"
+                    : "Purchase"}
                 </Button>
               </CardFooter>
             </Card>
